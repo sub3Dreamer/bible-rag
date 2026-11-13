@@ -1,0 +1,40 @@
+# API keys and environment variables
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# ChromaDB
+data/chroma/
+data/chroma_local/
+
+# Bible source data
+data/raw/
+data/processed/
+
+# Downloaded local models
+models/
+
+# OS
+.DS_Store
+Thumbs.db
