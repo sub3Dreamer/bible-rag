@@ -61,7 +61,8 @@ def create_local_vector_store() -> Chroma:
     embeddings = LocalE5Embeddings()
 
     return Chroma(
-        collection_name="bible_krv_e5_small",
+        # collection_name="bible_krv_e5_small",
+        collection_name="bible_krv_e5_small_ef500",
         embedding_function=embeddings,
         persist_directory="data/chroma_local",
     )
