@@ -27,6 +27,10 @@ class BibleRAG:
             k=k,
         )
 
+        # print("\n=== DEBUG: Retrieved Chunks ===")
+        # for index, chunk in enumerate(chunks, start=1):
+        #     print(f"{index}. {chunk['chunk_id']}")
+
         # 3. 검색 결과가 없는 경우
         if not chunks:
             return {
@@ -49,19 +53,46 @@ class BibleRAG:
         context = "\n\n".join(context_parts)
 
         # 5. 로컬 LLM 답변 생성
-        answer = self.generator.generate(
+        generation = self.generator.generate(
             question=question,
             context=context,
         )
 
+        # print("\n=== DEBUG: Generation ===")
+        # print(generation)
+
+        answer = generation["answer"]
+        source_ids = generation["source_ids"]
+
+        # print("\n=== DEBUG: Source IDs ===")
+        # print(source_ids)
+        # print("Source IDs Type:", type(source_ids))
+
         # 6. 검색 결과 기반 출처 구성
         sources = []
+        seen = set()
 
-        for chunk in chunks:
+        for source_id in source_ids:
+            if type(source_id) is not int:
+                continue
+
+            if source_id < 1 or source_id > len(chunks):
+                continue
+
+            if source_id in seen:
+                continue
+
+            seen.add(source_id)
+
+            chunk = chunks[source_id - 1]
+
             sources.append({
                 "chunk_id": chunk["chunk_id"],
                 "text": chunk["text"],
             })
+
+        if not sources:
+            answer = "제공된 자료에서 답을 확인할 수 없습니다."
 
         # 7. 구조화된 결과 반환
         return {
